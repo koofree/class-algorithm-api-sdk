@@ -7,7 +7,7 @@ import org.junit.Test;
  */
 public class SigmapiTest {
 
-    private static final String query = "asteroids";
+    private static final String query = "asteroids soccer";
 
     @Test
     public void test() {
