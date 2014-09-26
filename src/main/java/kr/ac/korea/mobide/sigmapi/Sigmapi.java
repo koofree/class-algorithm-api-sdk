@@ -1,5 +1,6 @@
 package kr.ac.korea.mobide.sigmapi;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map;
  */
 public abstract class Sigmapi {
 
+    private static final String[] except_strings = {null, "null"};
     private static final String score_url = "http://mobide.korea.ac.kr/apiservice/category";
 
     public static List<Score> getScores(String query, int count) {
@@ -19,6 +21,10 @@ public abstract class Sigmapi {
         Map<String, String> params = new HashMap<String, String>();
         params.put("query", query);
         params.put("count", Integer.toString(count));
+
+        if (Arrays.asList(except_strings).contains(query)) {
+            params.put("query", "");
+        }
 
         return Arrays.asList(scoreRequester.get(params));
     }
