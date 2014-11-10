@@ -1,10 +1,6 @@
 package kr.ac.korea.mobide.sigmapi;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Koo Lee on 2014-09-11.
@@ -12,13 +8,16 @@ import java.util.Map;
 public abstract class Sigmapi {
 
     private static final String[] except_strings = {null, "null"};
-    private static final String score_url = "http://mobide.korea.ac.kr/apiservice/category";
+    private static final String category_url = "http://mobide.korea.ac.kr/apiservice/category";
+    private static final String similarity_url = "http://mobide.korea.ac.kr/apiservice/similarity";
+    private static JsonRequester<Score[]> categoryRequester = new JsonRequester<Score[]>(
+            category_url, Score[].class);
+
+    private static JsonRequester<Score[]> similarityRequester = new JsonRequester<Score[]>(
+            similarity_url, Score[].class);
 
     public static List<Score> getScores(String query, int count) {
-        JsonRequester<Score[]> scoreRequester = new JsonRequester<Score[]>(
-                score_url, Score[].class);
-
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("query", query);
         params.put("count", Integer.toString(count));
 
@@ -26,6 +25,22 @@ public abstract class Sigmapi {
             params.put("query", "");
         }
 
-        return Arrays.asList(scoreRequester.get(params));
+        return Arrays.asList(categoryRequester.get(params));
+    }
+
+    public static List<Score> getSimilarity(String query, String[] targets) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("query", query);
+        ArrayList<String> list = new ArrayList<String>();
+        for (String target : targets) {
+            list.add(target);
+        }
+        params.put("targets", list);
+        
+        if (Arrays.asList(except_strings).contains(query)) {
+            params.put("query", "");
+        }
+
+        return Arrays.asList(similarityRequester.get(params));
     }
 }
