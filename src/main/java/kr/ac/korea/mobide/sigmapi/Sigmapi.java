@@ -7,6 +7,8 @@ import java.util.*;
  */
 public abstract class Sigmapi {
 
+    public static boolean view_log = false;
+
     private static final String[] except_strings = {null, "null"};
     private static final String category_url = "http://mobide.korea.ac.kr/apiservice/category";
     private static final String similarity_url = "http://mobide.korea.ac.kr/apiservice/similarity";
@@ -17,6 +19,8 @@ public abstract class Sigmapi {
             similarity_url, Score[].class);
 
     public static List<Score> getScores(String query, int count) {
+        log("category query : " + query + "(" + count + ")");
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("query", query);
         params.put("count", Integer.toString(count));
@@ -29,18 +33,34 @@ public abstract class Sigmapi {
     }
 
     public static List<Score> getSimilarity(String query, String[] targets) {
+        String targetString = "";
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("query", query);
         ArrayList<String> list = new ArrayList<String>();
         for (String target : targets) {
             list.add(target);
+            targetString += target + ", ";
         }
+
+        log("similarity query : " + query + " | " + targetString);
+
         params.put("targets", list);
-        
+
         if (Arrays.asList(except_strings).contains(query)) {
             params.put("query", "");
         }
 
         return Arrays.asList(similarityRequester.get(params));
+    }
+
+    private static void log(String log) {
+        if (view_log) {
+            System.out.println(log);
+        }
+    }
+
+    public static void setLog(boolean view_log) {
+        Sigmapi.view_log = view_log;
     }
 }
