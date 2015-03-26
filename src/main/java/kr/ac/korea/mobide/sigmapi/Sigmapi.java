@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by Koo Lee on 2014-09-11.
  */
-public abstract class Sigmapi {
+public abstract class Sigmapi extends AbstractLogApi {
 
     public static boolean view_log = false;
 
@@ -54,13 +54,5 @@ public abstract class Sigmapi {
         return Arrays.asList(similarityRequester.get(params));
     }
 
-    private static void log(String log) {
-        if (view_log) {
-            System.out.println(log);
-        }
-    }
 
-    public static void setLog(boolean view_log) {
-        Sigmapi.view_log = view_log;
-    }
 }
